@@ -58,19 +58,18 @@ dependencies {
     localRuntime(libs.sodium)
 }
 
-tasks.processResources {
-    val map = mapOf(
-        "mod_id" to modID,
-        "mod_group" to modGroup,
-        "mod_version" to version,
-        "fabric_loader_version" to libs.versions.fabric.loader.get(),
-        "fabric_api_version" to libs.versions.fabric.api.get(),
-        "minecraft_version" to libs.versions.minecraft.get(),
-    )
+val resourcesVars = mapOf(
+    "mod_id" to modID,
+    "mod_group" to modGroup,
+    "mod_version" to version,
+    "fabric_loader_version" to libs.versions.fabric.loader.get(),
+    "fabric_api_version" to libs.versions.fabric.api.get(),
+    "minecraft_version" to libs.versions.minecraft.get(),
+)
 
-    inputs.properties(map)
-    filesMatching("fabric.mod.json") { expand(map) }
-    filesMatching("*.mixins.json") { expand(map) }
+tasks.withType<ProcessResources> {
+    inputs.properties(resourcesVars)
+    filesMatching(listOf("fabric.mod.json", "*.mixins.json")) { expand(resourcesVars) }
 }
 
 java {
