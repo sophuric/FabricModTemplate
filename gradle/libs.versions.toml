@@ -6,6 +6,8 @@ fabric_loom = "1.17-SNAPSHOT"
 
 fabric_api = "0.154.2+26.1.2"
 
+minotaur = "2.+"
+
 devAuth = "1.2.2"
 modMenu = "18.0.0"
 noChatRestrictions = "Fabric-MC26.1-v1.1.0"
@@ -13,6 +15,7 @@ sodium = "mc26.1.2-0.9.1-fabric"
 
 [plugins]
 fabric_loom = { id = "net.fabricmc.fabric-loom", version.ref = "fabric_loom" }
+minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
 
 [libraries]
 minecraft = { group = "mojang", name = "minecraft", version.ref = "minecraft" }
