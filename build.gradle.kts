@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.minotaur)
 }
 
+val modrinthProjectID = property("modrinth.id").toString()
 val modID = property("mod.id").toString()
 val modGroup = property("mod.group").toString()
 val version = property("mod.version").toString()
@@ -89,7 +90,7 @@ tasks.jar { from("LICENSE") { rename { "${it}_${base.archivesName.get()}" } } }
 
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
-    projectId = modID
+    projectId = modrinthProjectID
     versionNumber = version
     versionType = "release"
     uploadFile.set(tasks.jar)
