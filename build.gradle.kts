@@ -19,10 +19,6 @@ loom {
             jvmArguments.addAll("-XX:+AllowEnhancedClassRedefinition", "-XX:+UseG1GC")
         }
 
-        named("client") {
-            jvmArguments.addAll("-Ddevauth.enabled=true")
-        }
-
         //remove(runs["server"])
     }
 
@@ -41,11 +37,6 @@ repositories {
         forRepository { maven("https://api.modrinth.com/maven") { name = "Modrinth" } }
         filter { includeGroup("maven.modrinth") }
     }
-
-    exclusiveContent {
-        forRepository { maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1") }
-        filter { includeGroup("me.djtheredstoner") }
-    }
 }
 
 dependencies {
@@ -54,7 +45,6 @@ dependencies {
     implementation(libs.fabric.loader)
     implementation(libs.fabric.api)
 
-    localRuntime(libs.devAuth)
     localRuntime(libs.modMenu)
     localRuntime(libs.noChatRestrictions)
     localRuntime(libs.sodium)
