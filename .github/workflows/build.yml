@@ -23,6 +23,6 @@ jobs:
           name: Output
           path: |
             build/libs/*.jar
-            !*-sources.jar
+            !**/*-sources.jar
           if-no-files-found: error
           archive: false
