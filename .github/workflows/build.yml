@@ -21,7 +21,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: Artifacts
-          paths: |
+          path: |
             'build/libs/*.jar'
             '!*-sources.jar'
           if-no-files-found: error
