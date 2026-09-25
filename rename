@@ -37,4 +37,3 @@ rename_directories ModTemplate "$name" src/**/*
 rename_directories modtemplate "$lowercase" src/**/*
 
 rm rename
-rm -rf .git
