@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "id": "${mod_id}",
   "version": "${mod_version}",
-  "name": "sophur's mod template",
+  "name": "${mod_name}",
   "description": "An amazing description here",
   "authors": [
     "sophur"
   ],
   "contact": {
-    "sources": "https://github.com/sophuric/ModTemplate"
+    "sources": "https://github.com/${repo_github}"
   },
   "license": "MPL-2.0",
   "icon": "assets/modtemplate/icon.png",
