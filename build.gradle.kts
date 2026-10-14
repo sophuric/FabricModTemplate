@@ -87,7 +87,6 @@ publishMods {
     modLoaders.add("fabric")
 
     type = STABLE
-    displayName = "$modName $version for Minecraft ${libs.versions.minecraft.get()}"
 
     changelog = providers.fileContents(layout.projectDirectory.file("CHANGELOG.md")).asText
 
@@ -102,6 +101,8 @@ publishMods {
 
     github {
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
+
+        displayName = "$modName $version for Minecraft ${libs.versions.minecraft.get()}"
 
         repository = githubRepo
         tagName = version
