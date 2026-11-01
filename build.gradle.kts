@@ -4,31 +4,51 @@ plugins {
     alias(libs.plugins.modPublishPlugin)
 }
 
-val modID = property("mod.id").toString()
+val modId = property("mod.id").toString()
 val modName = property("mod.name").toString()
 val modGroup = property("mod.group").toString()
-val version = property("mod.version").toString()
-val githubRepo = property("repo.github").toString()
+val modVersion = property("mod.version").toString()
 
-base.archivesName = "${modID}-${version}"
+val githubRepo = property("repo.github").toString()
+val modrinthId = property("modrinth.id").toString()
+
+base.archivesName = modId
+group = modGroup
+version = "$modVersion+mc${libs.versions.minecraft.get()}"
 
 loom {
+    runtimeOnlyLog4j = true
+
     splitEnvironmentSourceSets()
 
     runs {
-        all {
-            jvmArguments.addAll("-XX:+AllowEnhancedClassRedefinition", "-XX:+UseG1GC")
+        configureEach {
+            jvmArguments.addAll(
+                "-enableassertions",
+
+                // Mixin debugging, should make failures happen quicker
+                "-Dmixin.debug.verify=true",
+                "-Dmixin.debug.strict=true",
+                "-Dmixin.debug.countInjections=true",
+
+                // Memory Usage Optimization
+                "-XX:+UseZGC",
+                "-XX:+UseCompactObjectHeaders",
+                "-XX:+UseStringDeduplication",
+
+                "-XX:+AlwaysPreTouch" // Apparently makes startup faster
+            )
         }
 
         //remove(runs["server"])
     }
 
-    mods.create(modID) {
-        sourceSet(sourceSets.getByName("main"))
-        sourceSet(sourceSets.getByName("client"))
+    mods.create(modId) {
+        sourceSet("main")
+        sourceSet("client")
     }
 
-    accessWidenerPath = file("src/main/resources/$modID.classtweaker")
+    accessWidenerPath = file("src/main/resources/$modId.classtweaker")
 }
 
 repositories {
@@ -52,11 +72,12 @@ dependencies {
 }
 
 val resourcesVars = mapOf(
-    "mod_id" to modID,
+    "mod_id" to modId,
     "mod_name" to modName,
     "mod_group" to modGroup,
     "mod_version" to version,
     "repo_github" to githubRepo,
+
     "fabric_loader_version" to libs.versions.fabric.loader.get(),
     "fabric_api_version" to libs.versions.fabric.api.get(),
     "minecraft_version" to libs.versions.minecraft.get(),
@@ -79,13 +100,16 @@ tasks.withType<JavaCompile> {
     options.release = 25
 }
 
-tasks.jar { from("LICENSE") { rename { "${it}_${base.archivesName.get()}" } } }
+tasks.jar {
+    inputs.property("archivesName", project.base.archivesName)
+    from("LICENSE") { rename { "${it}_${inputs.properties["archivesName"]}" } }
+}
 
-publishMods.version = version
 publishMods {
     file = tasks.jar.get().archiveFile
     modLoaders.add("fabric")
 
+    version = modVersion
     type = STABLE
 
     changelog = providers.fileContents(layout.projectDirectory.file("CHANGELOG.md")).asText
@@ -93,7 +117,7 @@ publishMods {
     modrinth {
         accessToken = providers.environmentVariable("MODRINTH_TOKEN")
 
-        projectId = property("modrinth.id").toString()
+        projectId = modrinthId
         minecraftVersions.add(libs.versions.minecraft.get())
 
         requires("fabric-api")
@@ -102,7 +126,7 @@ publishMods {
     github {
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
 
-        displayName = "$modName $version for Minecraft ${libs.versions.minecraft.get()}"
+        displayName = "$modName $version for MC ${libs.versions.minecraft.get()}"
 
         repository = githubRepo
         tagName = version
