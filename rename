@@ -16,7 +16,7 @@ fi
 
 lowercase="$(printf "%s" "$name" | tr '[:upper:]' '[:lower:]')"
 IFS=''
-for i in src/**/*.{java,json,classtweaker} gradle.properties; do
+for i in src/**/*.{java,json,classtweaker} gradle.properties build.gradle.kts settings.gradle.kts; do
 	content="$(<"$i")"
 	content="${content//ModTemplate/"$name"}"
 	content="${content//modtemplate/"$lowercase"}"
