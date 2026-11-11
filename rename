@@ -3,9 +3,10 @@ set -o errexit
 set -o nounset
 set -o pipefail
 shopt -s globstar
+shopt -s patsub_replacement
 
-if [[ "$#" != 1 ]]; then
-	echo "Usage: rename <new mod name>"
+if [[ "$#" != 2 ]]; then
+	echo "Usage: rename <new mod name> <new mod display name>"
 	exit 1
 fi
 name="$1"
@@ -13,13 +14,21 @@ if ! [[ "$name" =~ ^[a-zA-Z][a-zA-Z0-9]*$ ]]; then
 	echo "Invalid mod name"
 	exit 1
 fi
+displayName="$2"
+if ! [[ "$displayName" =~ ^[[:print:]]+$ ]]; then
+	echo "Invalid mod display name"
+	exit 1
+fi
+
+displayNameEscaped="${displayName//[\"\\$]/\\&}"
 
 lowercase="$(printf "%s" "$name" | tr '[:upper:]' '[:lower:]')"
 IFS=''
 for i in src/**/*.{java,json,classtweaker} gradle.properties build.gradle.kts settings.gradle.kts; do
 	content="$(<"$i")"
-	content="${content//ModTemplate/"$name"}"
 	content="${content//modtemplate/"$lowercase"}"
+	content="${content//ModTemplate/"$name"}"
+	content="${content//Mod Template/"$displayNameEscaped"}"
 	printf "%s" "$content" > "$i"
 	echo "Modified \`${i}'"
 done

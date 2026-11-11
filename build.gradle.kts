@@ -5,7 +5,7 @@ plugins {
 }
 
 val modId = "modtemplate"
-val modName = "ModTemplate"
+val modName = "Mod Template"
 val modGroup = "me.sophur"
 val modVersion = property("mod.version").toString()
 
