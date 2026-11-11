@@ -108,7 +108,6 @@ publishMods {
     file = tasks.jar.get().archiveFile
     modLoaders.add("fabric")
 
-    version = modVersion
     type = STABLE
 
     changelog = providers.fileContents(layout.projectDirectory.file("CHANGELOG.md")).asText
@@ -125,7 +124,7 @@ publishMods {
     github {
         accessToken = providers.environmentVariable("GITHUB_TOKEN")
 
-        displayName = "$modName $version for MC ${libs.versions.minecraft.get()}"
+        displayName = "$modName $modVersion for MC ${libs.versions.minecraft.get()}"
 
         repository = githubRepo
         tagName = version
